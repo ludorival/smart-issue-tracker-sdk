@@ -12,7 +12,7 @@
   </a>
 </p>
 
-> A node module template using typescript and jest
+> A flexible sdk to track any kind of errors and create automatic issue if found new
 
 ## Install
 

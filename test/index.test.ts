@@ -1,15 +1,14 @@
-'use strict';
+import { Error, trackErrors } from '../src/index'
 
-import {Example} from '../src/index'
-describe('Example class', () => {
-	test('should create an instance using its constructor', () => {
-		const example: Example = new Example();
-		expect(example).toBeDefined; // tslint:disable-line:no-unused-expression
-	});
-	test('should return whatever is passed to exampleMethod()', () => {
-		const example: Example = new Example();
-		const param: string = 'This is my param.';
-		const returnValue: string = example.exampleMethod(param);
-		expect(returnValue).toBe(param);
-	});
-});
+describe('Track Errors', () => {
+  test.skip('should track a new error', async () => {
+    // given
+    const errors: Error[] = [
+      { message: 'A new error', timestamp: new Date().toTimeString() },
+    ]
+    // when
+    const groupedErrors = await trackErrors(errors)
+    // then
+    expect(groupedErrors).toMatchSnapshot()
+  })
+})

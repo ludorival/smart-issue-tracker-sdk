@@ -1,20 +1,23 @@
-'use strict';
+'use strict'
 
-export class Example {
-	/* Private Instance Fields */
+export * from './trackErrors'
 
-	private logger: Console;
+export type Error = {
+  message: string
+  timestamp: string
+  [key: string]: string
+}
 
-	/* Constructor */
-
-	constructor() {
-		this.logger = console;
-	}
-
-	/* Public Instance Methods */
-
-	public exampleMethod(param: string): string {
-		this.logger.info('Received: ' + param);
-		return param;
-	}
+export type Issue = {
+  id: string
+  url: string
+  [key: string]: any
+}
+export interface GroupedError {
+  id?: string
+  name: string
+  firstOccurrenceTimeStamp: string
+  lastOccurrenceTimeStamp: string
+  issue?: Issue
+  occurrences: Error[]
 }
