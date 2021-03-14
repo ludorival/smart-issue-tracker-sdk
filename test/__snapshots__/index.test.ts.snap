@@ -1,0 +1,321 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Custom comparator should use a custom comparator based on an error attribute 1`] = `
+Array [
+  Object {
+    "firstOccurrenceTimeStamp": 1,
+    "id": "error-1",
+    "issue": Object {
+      "body": "Found 2 occurences of \\"Error 1\\"",
+      "id": "1",
+      "title": "Error 1",
+      "url": "https://issue-tracker/project/test/1",
+    },
+    "lastOccurrenceTimeStamp": 3,
+    "name": "Error 1",
+    "occurrences": Array [
+      Object {
+        "message": "Error 1",
+        "myAttribute": 1,
+        "timestamp": 1,
+      },
+      Object {
+        "message": "Error 1",
+        "myAttribute": 1,
+        "timestamp": 3,
+      },
+    ],
+    "projectId": "test",
+  },
+  Object {
+    "firstOccurrenceTimeStamp": 2,
+    "id": "error-1",
+    "issue": Object {
+      "body": "Found 1 occurences of \\"Error 1\\"",
+      "id": "2",
+      "title": "Error 1",
+      "url": "https://issue-tracker/project/test/2",
+    },
+    "lastOccurrenceTimeStamp": 2,
+    "name": "Error 1",
+    "occurrences": Array [
+      Object {
+        "message": "Error 1",
+        "myAttribute": 2,
+        "timestamp": 2,
+      },
+    ],
+    "projectId": "test",
+  },
+]
+`;
+
+exports[`Custom comparator should use a custom comparator based on differences threshold 1`] = `
+Array [
+  Object {
+    "firstOccurrenceTimeStamp": 1,
+    "id": "error-1-:-arg0",
+    "issue": Object {
+      "body": "Found 2 occurences of \\"Error 1 : Arg0\\"",
+      "id": "1",
+      "title": "Error 1 : Arg0",
+      "url": "https://issue-tracker/project/test/1",
+    },
+    "lastOccurrenceTimeStamp": 2,
+    "name": "Error 1 : Arg0",
+    "occurrences": Array [
+      Object {
+        "message": "Error 1 : Arg0",
+        "timestamp": 1,
+      },
+      Object {
+        "message": "Error 1 : Arg1",
+        "timestamp": 2,
+      },
+    ],
+    "projectId": "test",
+  },
+]
+`;
+
+exports[`Track Existing Errors should track an existing error 1`] = `
+Array [
+  Object {
+    "firstOccurrenceTimeStamp": 1,
+    "id": "a-new-error",
+    "issue": Object {
+      "body": "Found 1 occurences of \\"A new error\\"",
+      "comments": Array [
+        Object {
+          "message": "A new error",
+          "timestamp": 2,
+        },
+      ],
+      "id": "1",
+      "title": "A new error",
+      "url": "https://issue-tracker/project/test/1",
+    },
+    "lastOccurrenceTimeStamp": 2,
+    "name": "A new error",
+    "occurrences": Array [
+      Object {
+        "message": "A new error",
+        "timestamp": 1,
+      },
+      Object {
+        "message": "A new error",
+        "timestamp": 2,
+      },
+    ],
+    "projectId": "test",
+  },
+]
+`;
+
+exports[`Track Existing Errors should track multiples existing errors 1`] = `
+Array [
+  Object {
+    "firstOccurrenceTimeStamp": 1,
+    "id": "error-1",
+    "issue": Object {
+      "body": "Found 2 occurences of \\"Error 1\\"",
+      "comments": Array [
+        Object {
+          "message": "Error 1",
+          "timestamp": 3,
+        },
+        Object {
+          "message": "Error 1",
+          "timestamp": 6,
+        },
+        Object {
+          "message": "Error 1",
+          "timestamp": 8,
+        },
+      ],
+      "id": "1",
+      "title": "Error 1",
+      "url": "https://issue-tracker/project/test/1",
+    },
+    "lastOccurrenceTimeStamp": 8,
+    "name": "Error 1",
+    "occurrences": Array [
+      Object {
+        "message": "Error 1",
+        "timestamp": 1,
+      },
+      Object {
+        "message": "Error 1",
+        "timestamp": 3,
+      },
+      Object {
+        "message": "Error 1",
+        "timestamp": 6,
+      },
+      Object {
+        "message": "Error 1",
+        "timestamp": 8,
+      },
+    ],
+    "projectId": "test",
+  },
+  Object {
+    "firstOccurrenceTimeStamp": 2,
+    "id": "error-2",
+    "issue": Object {
+      "body": "Found 2 occurences of \\"Error 2\\"",
+      "comments": Array [
+        Object {
+          "message": "Error 2",
+          "timestamp": 4,
+        },
+        Object {
+          "message": "Error 2",
+          "timestamp": 7,
+        },
+      ],
+      "id": "2",
+      "title": "Error 2",
+      "url": "https://issue-tracker/project/test/2",
+    },
+    "lastOccurrenceTimeStamp": 7,
+    "name": "Error 2",
+    "occurrences": Array [
+      Object {
+        "message": "Error 2",
+        "timestamp": 2,
+      },
+      Object {
+        "message": "Error 2",
+        "timestamp": 4,
+      },
+      Object {
+        "message": "Error 2",
+        "timestamp": 7,
+      },
+    ],
+    "projectId": "test",
+  },
+  Object {
+    "firstOccurrenceTimeStamp": 9,
+    "id": "error-4",
+    "issue": Object {
+      "body": "Found 2 occurences of \\"Error 4\\"",
+      "id": "9",
+      "title": "Error 4",
+      "url": "https://issue-tracker/project/test/9",
+    },
+    "lastOccurrenceTimeStamp": 10,
+    "name": "Error 4",
+    "occurrences": Array [
+      Object {
+        "message": "Error 4",
+        "timestamp": 9,
+      },
+      Object {
+        "message": "Error 4",
+        "timestamp": 10,
+      },
+    ],
+    "projectId": "test",
+  },
+]
+`;
+
+exports[`Track New Errors should track a new error 1`] = `
+Array [
+  Object {
+    "firstOccurrenceTimeStamp": 1,
+    "id": "a-new-error",
+    "issue": Object {
+      "body": "Found 1 occurences of \\"A new error\\"",
+      "id": "1",
+      "title": "A new error",
+      "url": "https://issue-tracker/project/test/1",
+    },
+    "lastOccurrenceTimeStamp": 1,
+    "name": "A new error",
+    "occurrences": Array [
+      Object {
+        "message": "A new error",
+        "timestamp": 1,
+      },
+    ],
+    "projectId": "test",
+  },
+]
+`;
+
+exports[`Track New Errors should zip sames new errors together 1`] = `
+Array [
+  Object {
+    "firstOccurrenceTimeStamp": 1,
+    "id": "a-new-error",
+    "issue": Object {
+      "body": "Found 3 occurences of \\"A new error\\"",
+      "id": "1",
+      "title": "A new error",
+      "url": "https://issue-tracker/project/test/1",
+    },
+    "lastOccurrenceTimeStamp": 4,
+    "name": "A new error",
+    "occurrences": Array [
+      Object {
+        "message": "A new error",
+        "timestamp": 1,
+      },
+      Object {
+        "message": "A new error",
+        "timestamp": 3,
+      },
+      Object {
+        "message": "A new error",
+        "timestamp": 4,
+      },
+    ],
+    "projectId": "test",
+  },
+  Object {
+    "firstOccurrenceTimeStamp": 2,
+    "id": "another-error",
+    "issue": Object {
+      "body": "Found 2 occurences of \\"Another error\\"",
+      "id": "2",
+      "title": "Another error",
+      "url": "https://issue-tracker/project/test/2",
+    },
+    "lastOccurrenceTimeStamp": 5,
+    "name": "Another error",
+    "occurrences": Array [
+      Object {
+        "message": "Another error",
+        "timestamp": 2,
+      },
+      Object {
+        "message": "Another error",
+        "timestamp": 5,
+      },
+    ],
+    "projectId": "test",
+  },
+  Object {
+    "firstOccurrenceTimeStamp": 6,
+    "id": "still-an-error",
+    "issue": Object {
+      "body": "Found 1 occurences of \\"Still an error\\"",
+      "id": "6",
+      "title": "Still an error",
+      "url": "https://issue-tracker/project/test/6",
+    },
+    "lastOccurrenceTimeStamp": 6,
+    "name": "Still an error",
+    "occurrences": Array [
+      Object {
+        "message": "Still an error",
+        "timestamp": 6,
+      },
+    ],
+    "projectId": "test",
+  },
+]
+`;

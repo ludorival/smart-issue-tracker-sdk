@@ -4,8 +4,8 @@ export * from './trackErrors'
 
 export type Error = {
   message: string
-  timestamp: string
-  [key: string]: string
+  timestamp: number
+  [key: string]: unknown
 }
 
 export type Issue = {
@@ -13,29 +13,30 @@ export type Issue = {
   url: string
   [key: string]: unknown
 }
-export interface GroupedError {
+export interface FederatedErrors {
   id?: string
   name: string
   projectId: string
-  firstOccurrenceTimeStamp: string
-  lastOccurrenceTimeStamp: string
-  issue?: Issue
+  firstOccurrenceTimeStamp: number
+  lastOccurrenceTimeStamp: number
   occurrences: Error[]
 }
 
-export type SavedGroupError = GroupedError & { id: string }
-export type SavedGroupErrorWithIssue = SavedGroupError & { issue: Issue }
+export type TrackedErrors = FederatedErrors & { issue: Issue }
+
+export type SavedTrackedErrors = TrackedErrors & { id: string }
 export interface ErrorDatabase {
-  save(errors: GroupedError[]): Promise<SavedGroupError[]>
-  fetch(projectId: string): Promise<SavedGroupError[]>
+  save(error: TrackedErrors): Promise<SavedTrackedErrors>
+  fetch(projectId: string): Promise<SavedTrackedErrors[]>
 }
 export interface IssueClient {
-  createIssue(error: GroupedError): Promise<Issue>
-  updateIssue(error: SavedGroupErrorWithIssue): Promise<Issue>
+  createIssue(error: FederatedErrors): Promise<Issue>
+  updateIssue(error: SavedTrackedErrors): Promise<Issue>
 }
-
+export type Comparator = (source: Error, target: Error) => number
 export type TrackErrorOptions = {
   database: ErrorDatabase
   issueClient: IssueClient
-  compareError?: (source: Error, target: Error) => 0 | 1 | -1
+  projectId: string
+  compareError?: Comparator
 }
