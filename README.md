@@ -12,7 +12,7 @@
   </a>
 </p>
 
-> A flexible sdk to track any kind of errors and create automatic issue if found new
+> A simple, flexible, light sdk to track any kind of errors and create automatic issue if found new.
 
 ## Install
 
@@ -30,7 +30,7 @@ yarn run test
 
 👤 **Ludovic Dorival**
 
-* Github: [@ludorival](https://github.com/ludorival)
+- Github: [@ludorival](https://github.com/ludorival)
 
 ## Show your support
 
@@ -41,5 +41,6 @@ Give a ⭐️ if this project helped you!
 Copyright © 2021 [Ludovic Dorival](https://github.com/ludorival).<br />
 This project is [BSD--3--Clause](https://github.com/ludorival/node-typescript-jest-template/blob/master/LICENSE) licensed.
 
-***
+---
+
 _This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
