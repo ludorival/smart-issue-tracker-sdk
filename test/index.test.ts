@@ -30,6 +30,9 @@ describe('Track New Errors', () => {
     const trackedErrors = await trackErrors(errors, options)
     // then
     expect(trackedErrors).toHaveLength(3)
+    expect(trackedErrors[0].newOccurrences).toHaveLength(3)
+    expect(trackedErrors[1].newOccurrences).toHaveLength(2)
+    expect(trackedErrors[2].newOccurrences).toHaveLength(1)
     expect(options.database.save).toHaveBeenCalled()
     expect(options.issueClient.createIssue).toHaveBeenCalled()
     expect(trackedErrors).toMatchSnapshot()
@@ -46,7 +49,7 @@ describe('Track Existing Errors', () => {
     const trackedErrors = await trackErrors(errors, options)
     // then
     expect(trackedErrors).toHaveLength(1)
-    expect(trackedErrors[0].occurrences).toHaveLength(2)
+    expect(trackedErrors[0].newOccurrences).toHaveLength(1)
     expect(options.database.save).toHaveBeenCalled()
     expect(options.issueClient.createIssue).toHaveBeenCalledTimes(0)
     expect(options.issueClient.updateIssue).toHaveBeenCalled()
@@ -74,6 +77,9 @@ describe('Track Existing Errors', () => {
     const trackedErrors = await trackErrors(errors, options)
     // then
     expect(trackedErrors).toHaveLength(3)
+    expect(trackedErrors[0].newOccurrences).toHaveLength(2)
+    expect(trackedErrors[1].newOccurrences).toHaveLength(1)
+    expect(trackedErrors[2].newOccurrences).toHaveLength(2)
     expect(options.database.save).toHaveBeenCalledTimes(3)
     expect(options.issueClient.createIssue).toHaveBeenCalledTimes(1)
     expect(options.issueClient.updateIssue).toHaveBeenCalledTimes(2)
@@ -101,7 +107,7 @@ describe('Track Existing Errors', () => {
 describe('Custom comparator', () => {
   test('should use a custom comparator based on differences threshold', async () => {
     // given
-    const comparator: Comparator = (a, b) => {
+    const comparator: Comparator<Error> = (a, b) => {
       const threshold =
         (a.message.length -
           difference(a.message.split(''), b.message.split('')).length) /
@@ -118,12 +124,13 @@ describe('Custom comparator', () => {
 
     // then
     expect(trackedErrors).toHaveLength(1)
+    expect(trackedErrors[0].newOccurrences).toHaveLength(2)
     expect(trackedErrors).toMatchSnapshot()
   })
 
   test('should use a custom comparator based on an error attribute', async () => {
     // given
-    const comparator: Comparator = (a, b) =>
+    const comparator: Comparator<Error> = (a, b) =>
       (a.myAttribute as number) - (b.myAttribute as number)
     const options = await initOptions([], comparator)
 
@@ -139,6 +146,8 @@ describe('Custom comparator', () => {
 
     // then
     expect(trackedErrors).toHaveLength(2)
+    expect(trackedErrors[0].newOccurrences).toHaveLength(2)
+    expect(trackedErrors[1].newOccurrences).toHaveLength(1)
     expect(trackedErrors).toMatchSnapshot()
   })
 })

@@ -1,19 +1,20 @@
-import {
-  SavedTrackedErrors,
-  Issue,
-  Error,
-  TrackErrorOptions,
-  FederatedErrors,
-  trackErrors,
-  Comparator,
-} from '../src/index'
 import { values } from 'lodash'
+import {
+  Comparator,
+  Error,
+  FederatedErrorsUntracked,
+  Issue,
+  RequiredFederatedErrors,
+  SavedTrackedErrors,
+  TrackErrorOptions,
+  trackErrors,
+} from '../src/index'
 
 let errorsCollections: { [id: string]: SavedTrackedErrors } = {}
 let issueCollections: { [id: string]: Issue } = {}
 export const initOptions = async (
   initialErrors: Error[] = [],
-  compareError?: Comparator
+  compareError?: Comparator<Error>
 ): Promise<TrackErrorOptions> => {
   errorsCollections = {}
   issueCollections = {}
@@ -34,23 +35,31 @@ export const initOptions = async (
       }),
     },
     issueClient: {
-      createIssue: jest.fn().mockImplementation((error: FederatedErrors) => {
-        const id = error.firstOccurrenceTimeStamp.toString()
-        issueCollections[id] = {
-          id,
-          url: `https://issue-tracker/project/${error.projectId}/${id}`,
-          title: error.name,
-          body: `Found ${error.occurrences.length} occurences of "${error.name}"`,
-        }
-        return Promise.resolve(issueCollections[id])
-      }),
-      updateIssue: jest.fn().mockImplementation((error: SavedTrackedErrors) => {
-        issueCollections[error.issue.id] = {
-          ...issueCollections[error.issue.id],
-          comments: [...error.occurrences].splice(1),
-        }
-        return Promise.resolve(issueCollections[error.issue.id])
-      }),
+      createIssue: jest
+        .fn()
+        .mockImplementation((error: FederatedErrorsUntracked) => {
+          const id = error.newOccurrences[0].timestamp.toString()
+          issueCollections[id] = {
+            id,
+            url: `https://issue-tracker/project/${error.projectId}/${id}`,
+            title: error.name,
+            body: `Found ${error.newOccurrences.length} occurences of "${error.name}"`,
+            comments: [],
+          }
+          return Promise.resolve(issueCollections[id])
+        }),
+      updateIssue: jest
+        .fn()
+        .mockImplementation((error: RequiredFederatedErrors) => {
+          issueCollections[error.issue.id] = {
+            ...issueCollections[error.issue.id],
+            comments: [
+              ...(issueCollections[error.issue.id]?.comments as string[]),
+              `Found new ${error.newOccurrences.length} occurences of ${error.name}`,
+            ],
+          }
+          return Promise.resolve(issueCollections[error.issue.id])
+        }),
     },
     projectId: 'test',
     compareError,

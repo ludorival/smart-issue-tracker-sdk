@@ -6,3 +6,4 @@ node_modules/
 
 # Project files:
 
+demo/error-issue-tracker-github-firebase-app/.env
