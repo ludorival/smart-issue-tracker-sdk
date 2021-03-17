@@ -14,6 +14,8 @@
 
 > A simple, flexible, light sdk to track any kind of errors and create automatic issue if found new.
 
+## Demo 
+
 Take a look to the demo 👉👉 [HERE](https://ludorival.github.io/demo-error-issue-tracker/) 👈👈
 
 There are many ways to use this sdk:
