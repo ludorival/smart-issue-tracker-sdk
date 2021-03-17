@@ -1,14 +1,14 @@
-<h1 align="center">Welcome to node-typescript-jest-template 👋</h1>
+<h1 align="center">Welcome to error-issue-tracker 👋</h1>
 <p>
   <img alt="Version" src="https://img.shields.io/badge/version-0.0.1-blue.svg?cacheSeconds=2592000" />
-  <a href="https://github.com/ludorival/node-typescript-jest-template#readme" target="_blank">
+  <a href="https://github.com/ludorival/error-issue-tracker#readme" target="_blank">
     <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
   </a>
-  <a href="https://github.com/ludorival/node-typescript-jest-template/graphs/commit-activity" target="_blank">
+  <a href="https://github.com/ludorival/error-issue-tracker/graphs/commit-activity" target="_blank">
     <img alt="Maintenance" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" />
   </a>
-  <a href="https://github.com/ludorival/node-typescript-jest-template/blob/master/LICENSE" target="_blank">
-    <img alt="License: BSD--3--Clause" src="https://img.shields.io/github/license/ludorival/node-typescript-jest-template" />
+  <a href="https://github.com/ludorival/error-issue-tracker/blob/master/LICENSE" target="_blank">
+    <img alt="License: BSD--3--Clause" src="https://img.shields.io/github/license/ludorival/error-issue-tracker" />
   </a>
 </p>
 
@@ -30,22 +30,11 @@ yarn add -D error-issue-tracker-sdk
 
 ## Usage
 
-```ts
-import {
-  trackErrors,
-  IssueClient,
-  ErrorDatabase,
-  FederatedErrorsUntracked,
-  RequiredFederatedErrors,
-  SavedTrackedErrors,
-  TrackedErrors,
-  Comparator,
-  Error,
-} from 'error-issue-tracker-sdk'
-
+```js
+import { trackErrors } from 'error-issue-tracker-sdk'
 // --- your issue client
-class MyIssueClient implements IssueClient {
-  async createIssue(error: FederatedErrorsUntracked) {
+class MyIssueClient {
+  async createIssue(error) {
     // here you can create the issue related to an untracked error
     return {
       id: 'newIdIssue',
@@ -53,19 +42,21 @@ class MyIssueClient implements IssueClient {
       body: `Found ${error.newOccurrences.length} occurences of "${error.name}"`,
     }
   }
-  async updateIssue(error: RequiredFederatedErrors) {
+  async updateIssue(error) {
     // here you can update the issue for example add a new comment for new occurences
     const comments = [
-      ...(error.issue.comments as string[]),
+      ...error.issue.comments,
       `Found new ${error.newOccurrences.length} occurences of ${error.name}`,
     ]
     return { ...error.issue, comments }
   }
 }
 // --- your database provider
-class MyDatabase implements ErrorDatabase {
-  store: any = {}
-  async save(error: TrackedErrors) {
+class MyDatabase {
+  constructor() {
+    this.store = {}
+  }
+  async save(error) {
     // here you save the error in a store
     this.store[error.projectId] = this.store[error.projectId] || []
     const savedError = {
@@ -75,37 +66,39 @@ class MyDatabase implements ErrorDatabase {
     this.store[error.projectId].push(savedError)
     return savedError
   }
-  async fetch(projectId: string) {
+  async fetch(projectId) {
     // here you can update the issue for example add a new comment for new occurences
-    return this.store[projectId] || ([] as SavedTrackedErrors[])
+    return this.store[projectId] || []
   }
 }
 // Your custom comparator
-const compareError: Comparator<Error> = (a, b) =>
+const compareError = (a, b) =>
   a.message.toLowerCase().localeCompare(b.message.toLowerCase())
 // use it
 const errors = [
   { message: 'Error when create the checkout', timestamp: 1 },
-
   { message: 'Error When Create The Checkout', timestamp: 2 },
-
   { message: 'Null Pointer Exception on payment page', timestamp: 3 },
-
   { message: 'cannot call login on undefined', timestamp: 4 },
-
   { message: 'Null Pointer Exception on payment page', timestamp: 5 },
 ]
-trackErrors(errors, {
-  issueClient: new MyIssueClient(),
-  database: new MyDatabase(),
-  compareError,
-  projectId: 'MyApplication',
-}).then((trackedErrors) => console.log(trackedErrors))
+src_1
+  .trackErrors(errors, {
+    issueClient: new MyIssueClient(),
+    database: new MyDatabase(),
+    compareError,
+    projectId: 'MyApplication',
+  })
+  .then((trackedErrors) => console.log(trackedErrors))
 // should return
 // - "Error when create the checkout" (occurrences : 2)
 // - "Null Pointer Exception on payment page" (occurrences : 2)
 // - "cannot call login on undefined" (occurences : 1)
 ```
+
+## Usage in Typescript
+
+Take a look to the [typescript version](usage.ts)
 
 ## Author
 
