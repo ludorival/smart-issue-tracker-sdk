@@ -2,6 +2,7 @@ import { values } from 'lodash'
 import {
   Comparator,
   Error,
+  FederatedErrors,
   FederatedErrorsUntracked,
   Issue,
   RequiredFederatedErrors,
@@ -14,7 +15,8 @@ let errorsCollections: { [id: string]: SavedTrackedErrors } = {}
 let issueCollections: { [id: string]: Issue } = {}
 export const initOptions = async (
   initialErrors: Error[] = [],
-  compareError?: Comparator<Error>
+  compareError?: Comparator<Error>,
+  compareFederatedErrors?: Comparator<FederatedErrors>
 ): Promise<TrackErrorOptions> => {
   errorsCollections = {}
   issueCollections = {}
@@ -63,6 +65,7 @@ export const initOptions = async (
     },
     projectId: 'test',
     compareError,
+    compareFederatedErrors,
   }
   initialErrors.length && (await trackErrors(initialErrors, options))
   jest.clearAllMocks()

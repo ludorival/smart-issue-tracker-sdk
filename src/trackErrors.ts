@@ -16,9 +16,11 @@ export async function trackErrors(
     projectId,
     compareError = (source, target) =>
       source.message.localeCompare(target.message),
+    compareFederatedErrors = (source, target) =>
+      compareError(source.newOccurrences[0], target.newOccurrences[0]),
   }: TrackErrorOptions
 ): Promise<SavedTrackedErrors[]> {
-  const compare = compareFederatedError(compareError)
+  const compare = compareFederatedErrors
 
   const federatedErrors: FederatedErrors[] = sortErrors(errors).map(
     (error) => ({
@@ -37,6 +39,7 @@ export async function trackErrors(
     .sort(compare)
     .reduce(reduceErrors(compare), [])
     .filter(hasChanged)
+    .reduce(reduceErrors(compare), [])
 
   const newSavedErrors = await Promise.all(
     newErrors.map((error) => {
@@ -52,13 +55,6 @@ export async function trackErrors(
 
   return newSavedErrors
 }
-
-const compareFederatedError = (
-  comparator: Comparator<Error>
-): Comparator<FederatedErrors> => (
-  source: FederatedErrors,
-  target: FederatedErrors
-) => comparator(source.newOccurrences[0], target.newOccurrences[0])
 
 const reduceErrors = (compareError: Comparator<FederatedErrors>) => (
   accumulated: FederatedErrors[],

@@ -44,4 +44,5 @@ export type TrackErrorOptions = {
   issueClient: IssueClient
   projectId: string
   compareError?: Comparator<Error>
+  compareFederatedErrors?: Comparator<FederatedErrors>
 }

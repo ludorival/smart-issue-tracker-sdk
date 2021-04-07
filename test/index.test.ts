@@ -1,5 +1,5 @@
 import { difference } from 'lodash'
-import { Comparator, Error, trackErrors } from '../src/index'
+import { Comparator, Error, FederatedErrors, trackErrors } from '../src/index'
 import { anError, initOptions } from './generator'
 
 describe('Track New Errors', () => {
@@ -148,6 +148,38 @@ describe('Custom comparator', () => {
     expect(trackedErrors).toHaveLength(2)
     expect(trackedErrors[0].newOccurrences).toHaveLength(2)
     expect(trackedErrors[1].newOccurrences).toHaveLength(1)
+    expect(trackedErrors).toMatchSnapshot()
+  })
+
+  test('should use a custom federated comparator comparator ', async () => {
+    // given
+    const comparator: Comparator<Error> = (a, b) => {
+      const wordsA = a.message.split(' ')
+      const wordsB = b.message.split(' ')
+      const diff = difference(wordsA, wordsB)
+      const threshold = (wordsA.length - diff.length) / wordsA.length
+      return threshold >= 0.8 ? 0 : a.message.localeCompare(b.message)
+    }
+    const comparatorFederatedErrors: Comparator<FederatedErrors> = (a, b) =>
+      b.newOccurrences.some((occ) => comparator(a.newOccurrences[0], occ) === 0)
+        ? 0
+        : comparator(a.newOccurrences[0], b.newOccurrences[0])
+    const options = await initOptions([], undefined, comparatorFederatedErrors)
+
+    // when
+    const trackedErrors = await trackErrors(
+      [
+        anError('Long Error with multiple Arguments : (Arg1, Arg2, Arg3)'),
+        anError('Long Error with multiple Arguments : (Arg5, Arg4, Arg3)'),
+        anError('Long Error with multiple Arguments : (Arg0, Arg7, Arg8)'),
+        anError('Long Error with multiple Arguments : (Arg1, Arg2, Arg4)'),
+      ],
+      options
+    )
+
+    // then
+    expect(trackedErrors).toHaveLength(3)
+    expect(trackedErrors[1].newOccurrences).toHaveLength(2)
     expect(trackedErrors).toMatchSnapshot()
   })
 })

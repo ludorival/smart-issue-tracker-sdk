@@ -78,6 +78,72 @@ Array [
 ]
 `;
 
+exports[`Custom comparator should use a custom federated comparator comparator  1`] = `
+Array [
+  Object {
+    "id": "long-error-with-multiple-arguments-:-(arg0,-arg7,-arg8)",
+    "issue": Object {
+      "body": "Found 1 occurences of \\"Long Error with multiple Arguments : (Arg0, Arg7, Arg8)\\"",
+      "comments": Array [],
+      "id": "3",
+      "title": "Long Error with multiple Arguments : (Arg0, Arg7, Arg8)",
+      "url": "https://issue-tracker/project/test/3",
+    },
+    "name": "Long Error with multiple Arguments : (Arg0, Arg7, Arg8)",
+    "newOccurrences": Array [
+      Object {
+        "message": "Long Error with multiple Arguments : (Arg0, Arg7, Arg8)",
+        "timestamp": 3,
+      },
+    ],
+    "occurrences": Array [],
+    "projectId": "test",
+  },
+  Object {
+    "id": "long-error-with-multiple-arguments-:-(arg1,-arg2,-arg3)",
+    "issue": Object {
+      "body": "Found 2 occurences of \\"Long Error with multiple Arguments : (Arg1, Arg2, Arg3)\\"",
+      "comments": Array [],
+      "id": "1",
+      "title": "Long Error with multiple Arguments : (Arg1, Arg2, Arg3)",
+      "url": "https://issue-tracker/project/test/1",
+    },
+    "name": "Long Error with multiple Arguments : (Arg1, Arg2, Arg3)",
+    "newOccurrences": Array [
+      Object {
+        "message": "Long Error with multiple Arguments : (Arg1, Arg2, Arg3)",
+        "timestamp": 1,
+      },
+      Object {
+        "message": "Long Error with multiple Arguments : (Arg1, Arg2, Arg4)",
+        "timestamp": 4,
+      },
+    ],
+    "occurrences": Array [],
+    "projectId": "test",
+  },
+  Object {
+    "id": "long-error-with-multiple-arguments-:-(arg5,-arg4,-arg3)",
+    "issue": Object {
+      "body": "Found 1 occurences of \\"Long Error with multiple Arguments : (Arg5, Arg4, Arg3)\\"",
+      "comments": Array [],
+      "id": "2",
+      "title": "Long Error with multiple Arguments : (Arg5, Arg4, Arg3)",
+      "url": "https://issue-tracker/project/test/2",
+    },
+    "name": "Long Error with multiple Arguments : (Arg5, Arg4, Arg3)",
+    "newOccurrences": Array [
+      Object {
+        "message": "Long Error with multiple Arguments : (Arg5, Arg4, Arg3)",
+        "timestamp": 2,
+      },
+    ],
+    "occurrences": Array [],
+    "projectId": "test",
+  },
+]
+`;
+
 exports[`Track Existing Errors should track an existing error 1`] = `
 Array [
   Object {
