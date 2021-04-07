@@ -39,7 +39,6 @@ export async function trackErrors(
     .sort(compare)
     .reduce(reduceErrors(compare), [])
     .filter(hasChanged)
-    .reduce(reduceErrors(compare), [])
 
   const newSavedErrors = await Promise.all(
     newErrors.map((error) => {
