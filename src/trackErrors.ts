@@ -22,15 +22,13 @@ export async function trackErrors(
 ): Promise<SavedTrackedErrors[]> {
   const compare = compareFederatedErrors
 
-  const federatedErrors: FederatedErrors[] = sortErrors(errors).map(
-    (error) => ({
-      name: error.message,
-      projectId,
-      occurrences: [],
-      newOccurrences: [error],
-      hasChanged: true,
-    })
-  )
+  const federatedErrors: FederatedErrors[] = errors.map((error) => ({
+    name: error.message,
+    projectId,
+    occurrences: [],
+    newOccurrences: [error],
+    hasChanged: true,
+  }))
 
   const savedErrors: FederatedErrors[] = await database.fetch(projectId)
 
@@ -61,13 +59,16 @@ const reduceErrors = (compareError: Comparator<FederatedErrors>) => (
 ): FederatedErrors[] => {
   const last = accumulated[accumulated.length - 1]
   if (last && compareError(last, current) === 0) {
-    if (firstTimestamp(current) > lastTimestamp(last)) {
+    const newOccurrences = removeDoublons(
+      last.newOccurrences.concat(current.newOccurrences)
+    )
+    if (newOccurrences.length > last.newOccurrences.length) {
       if (!last.hasChanged) {
         last.occurrences = last.occurrences.concat(last.newOccurrences)
         last.newOccurrences = []
       }
       last.hasChanged = true
-      last.newOccurrences = last.newOccurrences.concat(current.newOccurrences)
+      last.newOccurrences = newOccurrences
     }
     return accumulated
   } else {
@@ -75,11 +76,10 @@ const reduceErrors = (compareError: Comparator<FederatedErrors>) => (
   }
 }
 
-const lastTimestamp = (errors: FederatedErrors) =>
-  errors.newOccurrences[errors.newOccurrences.length - 1].timestamp || 0
-
-const firstTimestamp = (errors: FederatedErrors) =>
-  (errors.occurrences[0] || errors.newOccurrences[0]).timestamp
+const removeDoublons = (errors: Error[]) =>
+  sortErrors(errors).filter(
+    (error, i, array) => array[i - 1]?.timestamp !== error.timestamp
+  )
 
 const sortErrors = (errors: Error[]) =>
   errors.sort((a, b) => a.timestamp - b.timestamp)
