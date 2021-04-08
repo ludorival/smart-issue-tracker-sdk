@@ -1,6 +1,6 @@
 {
   "name": "error-issue-tracker-sdk",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "A simple, flexible, light sdk to track any kind of errors and create automatic issue if found new.",
   "keywords": [
     "error",
