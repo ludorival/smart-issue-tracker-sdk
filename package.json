@@ -30,7 +30,6 @@
     "coverall": "jest --coverage && coveralls < coverage/lcov.info",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "preversion": "npm run build",
-    "postversion": "git push && git push --tags",
     "prepare": "npm run build",
     "test": "jest",
     "upgrade": "npx npm-check -u",
