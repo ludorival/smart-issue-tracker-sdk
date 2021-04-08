@@ -1,5 +1,5 @@
 import { difference } from 'lodash'
-import { Comparator, Error, FederatedErrors, trackErrors } from '../src/index'
+import { Comparator, Error, BundledErrors, trackErrors } from '../src/index'
 import { anError, initOptions } from './generator'
 
 describe('Track New Errors', () => {
@@ -102,6 +102,30 @@ describe('Track Existing Errors', () => {
     expect(options.issueClient.createIssue).toHaveBeenCalledTimes(0)
     expect(options.issueClient.updateIssue).toHaveBeenCalledTimes(0)
   })
+
+  test('should ignore matched errors for already tracked errors', async () => {
+    // given
+    const options = await initOptions([
+      anError('Error 1', 1),
+      anError('Error 2', 2),
+    ])
+    const errors: Error[] = [anError('Error 3', 1)]
+    const onMatchedTrackedErrors = jest.fn()
+    // when
+    const trackedErrors = await trackErrors(errors, {
+      ...options,
+      compareError: () => 0,
+      eventHandler: {
+        onMatchedTrackedErrors,
+      },
+    })
+    // then
+    expect(trackedErrors).toHaveLength(1)
+    expect(onMatchedTrackedErrors).toHaveBeenCalled()
+    expect(options.database.save).toHaveBeenCalledTimes(1)
+    expect(options.issueClient.createIssue).toHaveBeenCalledTimes(0)
+    expect(options.issueClient.updateIssue).toHaveBeenCalledTimes(1)
+  })
 })
 
 describe('Custom comparator', () => {
@@ -151,7 +175,7 @@ describe('Custom comparator', () => {
     expect(trackedErrors).toMatchSnapshot()
   })
 
-  test('should use a custom federated comparator comparator ', async () => {
+  test('should use a custom bundled comparator comparator ', async () => {
     // given
     const comparator: Comparator<Error> = (a, b) => {
       const wordsA = a.message.split(' ')
@@ -160,11 +184,11 @@ describe('Custom comparator', () => {
       const threshold = (wordsA.length - diff.length) / wordsA.length
       return threshold >= 0.8 ? 0 : a.message.localeCompare(b.message)
     }
-    const comparatorFederatedErrors: Comparator<FederatedErrors> = (a, b) =>
+    const comparatorBundledErrors: Comparator<BundledErrors> = (a, b) =>
       b.newOccurrences.some((occ) => comparator(a.newOccurrences[0], occ) === 0)
         ? 0
         : comparator(a.newOccurrences[0], b.newOccurrences[0])
-    const options = await initOptions([], undefined, comparatorFederatedErrors)
+    const options = await initOptions([], undefined, comparatorBundledErrors)
 
     // when
     const trackedErrors = await trackErrors(

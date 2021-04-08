@@ -14,7 +14,7 @@ export type Issue = {
   [key: string]: unknown
 }
 
-export interface FederatedErrors {
+export interface BundledErrors {
   id?: string
   name: string
   projectId: string
@@ -23,26 +23,35 @@ export interface FederatedErrors {
   hasChanged?: boolean
   issue?: Issue
 }
-export type SavedTrackedErrors = Omit<Required<FederatedErrors>, 'hasChanged'>
+export type SavedTrackedErrors = Omit<Required<BundledErrors>, 'hasChanged'>
 export type NewTrackedErrors = Omit<SavedTrackedErrors, 'id'>
 export type TrackedErrors = SavedTrackedErrors | NewTrackedErrors
-export type NewFederatedErrors = Omit<FederatedErrors, 'id'>
-export type RequiredFederatedErrors = Required<FederatedErrors>
-export type FederatedErrorsUntracked = Omit<Required<FederatedErrors>, 'issue'>
+export type NewBundledErrors = Omit<BundledErrors, 'id'>
+export type RequiredBundledErrors = Required<BundledErrors>
+export type BundledErrorsUntracked = Omit<Required<BundledErrors>, 'issue'>
 
 export interface ErrorDatabase {
   save(error: TrackedErrors): Promise<SavedTrackedErrors>
   fetch(projectId: string): Promise<SavedTrackedErrors[]>
 }
 export interface IssueClient {
-  createIssue(error: FederatedErrorsUntracked): Promise<Issue>
-  updateIssue(error: RequiredFederatedErrors): Promise<Issue>
+  createIssue(error: BundledErrorsUntracked): Promise<Issue>
+  updateIssue(error: RequiredBundledErrors): Promise<Issue>
 }
 export type Comparator<T> = (source: T, target: T) => number
+export interface EventHandler {
+  onIgnoredError?: (source: BundledErrors, target: BundledErrors) => void
+  onBundledErrors?: (source: BundledErrors, target: BundledErrors) => void
+  onMatchedTrackedErrors?: (
+    source: SavedTrackedErrors,
+    target: SavedTrackedErrors
+  ) => void
+}
 export type TrackErrorOptions = {
   database: ErrorDatabase
   issueClient: IssueClient
   projectId: string
   compareError?: Comparator<Error>
-  compareFederatedErrors?: Comparator<FederatedErrors>
+  compareBundledErrors?: Comparator<BundledErrors>
+  eventHandler?: EventHandler
 }

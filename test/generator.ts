@@ -2,10 +2,10 @@ import { values } from 'lodash'
 import {
   Comparator,
   Error,
-  FederatedErrors,
-  FederatedErrorsUntracked,
+  BundledErrors,
+  BundledErrorsUntracked,
   Issue,
-  RequiredFederatedErrors,
+  RequiredBundledErrors,
   SavedTrackedErrors,
   TrackErrorOptions,
   trackErrors,
@@ -16,7 +16,7 @@ let issueCollections: { [id: string]: Issue } = {}
 export const initOptions = async (
   initialErrors: Error[] = [],
   compareError?: Comparator<Error>,
-  compareFederatedErrors?: Comparator<FederatedErrors>
+  compareBundledErrors?: Comparator<BundledErrors>
 ): Promise<TrackErrorOptions> => {
   errorsCollections = {}
   issueCollections = {}
@@ -39,7 +39,7 @@ export const initOptions = async (
     issueClient: {
       createIssue: jest
         .fn()
-        .mockImplementation((error: FederatedErrorsUntracked) => {
+        .mockImplementation((error: BundledErrorsUntracked) => {
           const id = error.newOccurrences[0].timestamp.toString()
           issueCollections[id] = {
             id,
@@ -52,7 +52,7 @@ export const initOptions = async (
         }),
       updateIssue: jest
         .fn()
-        .mockImplementation((error: RequiredFederatedErrors) => {
+        .mockImplementation((error: RequiredBundledErrors) => {
           issueCollections[error.issue.id] = {
             ...issueCollections[error.issue.id],
             comments: [
@@ -65,7 +65,7 @@ export const initOptions = async (
     },
     projectId: 'test',
     compareError,
-    compareFederatedErrors,
+    compareBundledErrors,
   }
   initialErrors.length && (await trackErrors(initialErrors, options))
   jest.clearAllMocks()

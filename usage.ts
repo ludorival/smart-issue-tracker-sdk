@@ -2,8 +2,8 @@ import {
   trackErrors,
   IssueClient,
   ErrorDatabase,
-  FederatedErrorsUntracked,
-  RequiredFederatedErrors,
+  BundledErrorsUntracked,
+  RequiredBundledErrors,
   SavedTrackedErrors,
   TrackedErrors,
   Comparator,
@@ -12,7 +12,7 @@ import {
 
 // --- your issue client
 class MyIssueClient implements IssueClient {
-  async createIssue(error: FederatedErrorsUntracked) {
+  async createIssue(error: BundledErrorsUntracked) {
     // here you can create the issue related to an untracked error
     return {
       id: 'newIdIssue',
@@ -20,7 +20,7 @@ class MyIssueClient implements IssueClient {
       body: `Found ${error.newOccurrences.length} occurences of "${error.name}"`,
     }
   }
-  async updateIssue(error: RequiredFederatedErrors) {
+  async updateIssue(error: RequiredBundledErrors) {
     // here you can update the issue for example add a new comment for new occurences
     const comments = [
       ...(error.issue.comments as string[]),

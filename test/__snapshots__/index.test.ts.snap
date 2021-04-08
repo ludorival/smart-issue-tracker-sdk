@@ -78,7 +78,7 @@ Array [
 ]
 `;
 
-exports[`Custom comparator should use a custom federated comparator comparator  1`] = `
+exports[`Custom comparator should use a custom bundled comparator comparator  1`] = `
 Array [
   Object {
     "id": "long-error-with-multiple-arguments-:-(arg0,-arg7,-arg8)",
