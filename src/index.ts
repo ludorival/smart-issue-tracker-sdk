@@ -1,57 +1,52 @@
 'use strict'
 
-export * from './trackErrors'
+export * from './trackIssues'
 
-export type Error = {
-  message: string
+export interface Occurrence {
   timestamp: number
-  [key: string]: unknown
 }
 
-export type Issue = {
-  id: string
-  url: string
-  [key: string]: unknown
-}
-
-export interface BundledErrors {
+export interface Issue<T extends Occurrence = Occurrence> {
   id?: string
-  name: string
-  projectId: string
-  occurrences: Error[]
-  newOccurrences: Error[]
-  hasChanged?: boolean
-  issue?: Issue
+  url?: string
+  occurrences: T[]
 }
-export type SavedTrackedErrors = Omit<Required<BundledErrors>, 'hasChanged'>
-export type NewTrackedErrors = Omit<SavedTrackedErrors, 'id'>
-export type TrackedErrors = SavedTrackedErrors | NewTrackedErrors
-export type NewBundledErrors = Omit<BundledErrors, 'id'>
-export type RequiredBundledErrors = Required<BundledErrors>
-export type BundledErrorsUntracked = Omit<Required<BundledErrors>, 'issue'>
 
-export interface ErrorDatabase {
-  save(error: TrackedErrors): Promise<SavedTrackedErrors>
-  fetch(projectId: string): Promise<SavedTrackedErrors[]>
-}
-export interface IssueClient {
-  createIssue(error: BundledErrorsUntracked): Promise<Issue>
-  updateIssue(error: RequiredBundledErrors): Promise<Issue>
+export type TrackedIssue<T> = T & { id: string }
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface FetchOption {}
+
+export interface IssueClient<
+  T extends Issue<R>,
+  R extends Occurrence = Occurrence,
+  S extends FetchOption = FetchOption
+> {
+  createIssue(issue: T): Promise<TrackedIssue<T>>
+  updateIssue(issue: TrackedIssue<T>): Promise<TrackedIssue<T>>
+  fetchIssues(options: S): Promise<TrackedIssue<T>[]>
 }
 export type Comparator<T> = (source: T, target: T) => number
-export interface EventHandler {
-  onIgnoredError?: (source: BundledErrors, target: BundledErrors) => void
-  onBundledErrors?: (source: BundledErrors, target: BundledErrors) => void
-  onMatchedTrackedErrors?: (
-    source: SavedTrackedErrors,
-    target: SavedTrackedErrors
-  ) => void
+export interface Hook<T extends Issue<R>, R extends Occurrence = Occurrence> {
+  initializeNewIssue?: (occurrence: R) => T
+  compareIssue: Comparator<T>
+  shouldBundleIssueInto?: (issueToBundle: T, into: T) => boolean
 }
-export type TrackErrorOptions = {
-  database: ErrorDatabase
-  issueClient: IssueClient
-  projectId: string
-  compareError?: Comparator<Error>
-  compareBundledErrors?: Comparator<BundledErrors>
-  eventHandler?: EventHandler
+export interface EventHandler<
+  T extends Issue<R>,
+  R extends Occurrence = Occurrence
+> {
+  onIgnoredOccurrence?: (source: T, target: T) => void
+  onBundledIssue?: (target: T, newOccurences: R[]) => void
+  onMatchedTrackedIssues?: (source: T, target: T) => void
+  onNotBundledIssue?: (source: T, target?: T) => void
+}
+export type TrackIssueOptions<
+  T extends Issue<R>,
+  R extends Occurrence = Occurrence,
+  S extends FetchOption = FetchOption
+> = {
+  issueClient: IssueClient<T, R, S>
+  fetchOption: S
+  hooks: Hook<T, R>
+  eventHandler?: EventHandler<T, R>
 }

@@ -1,73 +1,96 @@
 import { values } from 'lodash'
 import {
   Comparator,
-  Error,
-  BundledErrors,
-  BundledErrorsUntracked,
+  EventHandler,
   Issue,
-  RequiredBundledErrors,
-  SavedTrackedErrors,
-  TrackErrorOptions,
-  trackErrors,
+  Occurrence,
+  TrackIssueOptions,
+  trackIssues,
 } from '../src/index'
+export interface Error extends Occurrence {
+  message: string
+  ignored?: boolean
+  customAttribute?: number
+}
 
-let errorsCollections: { [id: string]: SavedTrackedErrors } = {}
-let issueCollections: { [id: string]: Issue } = {}
-export const initOptions = async (
-  initialErrors: Error[] = [],
-  compareError?: Comparator<Error>,
-  compareBundledErrors?: Comparator<BundledErrors>
-): Promise<TrackErrorOptions> => {
-  errorsCollections = {}
-  issueCollections = {}
-  const options = {
-    database: {
-      save: jest.fn().mockImplementation((error: SavedTrackedErrors) => {
-        errorsCollections[error.name] = {
-          ...error,
-
-          id: error.name.replace(/\s/g, '-').toLowerCase(),
-        }
-        return Promise.resolve(errorsCollections[error.name])
+export interface TestIssue extends Issue<Error> {
+  title: string
+  body: string
+  comments: string[]
+  newOccurrences: Error[]
+}
+let issuesCollections: { [id: string]: Required<TestIssue> } = {}
+export const initOptions = async ({
+  initialIssues = [],
+  compareOccurrence = (source, target) =>
+    source.message.localeCompare(target.message),
+  compareIssue = (source, target) =>
+    compareOccurrence(source.occurrences[0], target.occurrences[0]),
+  eventHandler,
+}: {
+  initialIssues?: Error[]
+  compareOccurrence?: Comparator<Error>
+  compareIssue?: Comparator<TestIssue>
+  eventHandler?: EventHandler<TestIssue, Error>
+} = {}): Promise<TrackIssueOptions<TestIssue, Error>> => {
+  issuesCollections = {}
+  const options: TrackIssueOptions<TestIssue, Error> = {
+    hooks: {
+      initializeNewIssue: (occ) => ({
+        newOccurrences: [],
+        occurrences: [occ],
+        title: occ.message,
+        body: '',
+        comments: [],
       }),
-      fetch: jest.fn().mockImplementation((projectId: string) => {
-        return Promise.resolve(
-          values(errorsCollections).filter((e) => e.projectId === projectId)
-        )
-      }),
+      compareIssue,
+      shouldBundleIssueInto: (issueToBundle) =>
+        !issueToBundle.occurrences[0]?.ignored,
     },
     issueClient: {
-      createIssue: jest
-        .fn()
-        .mockImplementation((error: BundledErrorsUntracked) => {
-          const id = error.newOccurrences[0].timestamp.toString()
-          issueCollections[id] = {
-            id,
-            url: `https://issue-tracker/project/${error.projectId}/${id}`,
-            title: error.name,
-            body: `Found ${error.newOccurrences.length} occurences of "${error.name}"`,
-            comments: [],
-          }
-          return Promise.resolve(issueCollections[id])
-        }),
+      createIssue: jest.fn().mockImplementation((issue: TestIssue) => {
+        const id = issue.occurrences[0].timestamp.toString()
+        issuesCollections[id] = {
+          ...issue,
+          id,
+          url: `https://issue-tracker/project/${id}`,
+          title: issue.occurrences[0].message,
+          body: `Found ${issue.occurrences.length} occurences of "${issue.occurrences[0].message}"`,
+          comments: [],
+        }
+        return Promise.resolve(issuesCollections[id])
+      }),
+      fetchIssues: jest.fn().mockImplementation(() => {
+        return Promise.resolve(values(issuesCollections))
+      }),
       updateIssue: jest
         .fn()
-        .mockImplementation((error: RequiredBundledErrors) => {
-          issueCollections[error.issue.id] = {
-            ...issueCollections[error.issue.id],
+        .mockImplementation((issue: Required<TestIssue>) => {
+          issuesCollections[issue.id] = {
+            ...issuesCollections[issue.id],
             comments: [
-              ...(issueCollections[error.issue.id]?.comments as string[]),
-              `Found new ${error.newOccurrences.length} occurences of ${error.name}`,
+              ...(issuesCollections[issue.id]?.comments as string[]),
+              `Found new ${issue.newOccurrences.length} occurences of ${issue.title}`,
             ],
           }
-          return Promise.resolve(issueCollections[error.issue.id])
+          return Promise.resolve(issuesCollections[issue.id])
         }),
     },
-    projectId: 'test',
-    compareError,
-    compareBundledErrors,
+    fetchOption: {},
+    eventHandler: {
+      ...eventHandler,
+      onBundledIssue: (target, newOccurrences) =>
+        (target.newOccurrences = (target.newOccurrences || []).concat(
+          newOccurrences
+        )),
+      onNotBundledIssue: (source, target) => {
+        if (!target && !source.id) {
+          source.newOccurrences = source.occurrences
+        }
+      },
+    },
   }
-  initialErrors.length && (await trackErrors(initialErrors, options))
+  initialIssues.length && (await trackIssues(initialIssues, options))
   jest.clearAllMocks()
   return options
 }
