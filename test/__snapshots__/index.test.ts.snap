@@ -1,115 +1,32 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Custom comparator should use a custom comparator based on an error attribute 1`] = `
-Array [
-  Object {
-    "id": "error-1",
-    "issue": Object {
-      "body": "Found 2 occurences of \\"Error 1\\"",
-      "comments": Array [],
-      "id": "1",
-      "title": "Error 1",
-      "url": "https://issue-tracker/project/test/1",
-    },
-    "name": "Error 1",
-    "newOccurrences": Array [
-      Object {
-        "message": "Error 1",
-        "myAttribute": 1,
-        "timestamp": 1,
-      },
-      Object {
-        "message": "Error 1",
-        "myAttribute": 1,
-        "timestamp": 3,
-      },
-    ],
-    "occurrences": Array [],
-    "projectId": "test",
-  },
-  Object {
-    "id": "error-1",
-    "issue": Object {
-      "body": "Found 1 occurences of \\"Error 1\\"",
-      "comments": Array [],
-      "id": "2",
-      "title": "Error 1",
-      "url": "https://issue-tracker/project/test/2",
-    },
-    "name": "Error 1",
-    "newOccurrences": Array [
-      Object {
-        "message": "Error 1",
-        "myAttribute": 2,
-        "timestamp": 2,
-      },
-    ],
-    "occurrences": Array [],
-    "projectId": "test",
-  },
-]
-`;
-
-exports[`Custom comparator should use a custom comparator based on differences threshold 1`] = `
-Array [
-  Object {
-    "id": "error-1-:-arg0",
-    "issue": Object {
-      "body": "Found 2 occurences of \\"Error 1 : Arg0\\"",
-      "comments": Array [],
-      "id": "1",
-      "title": "Error 1 : Arg0",
-      "url": "https://issue-tracker/project/test/1",
-    },
-    "name": "Error 1 : Arg0",
-    "newOccurrences": Array [
-      Object {
-        "message": "Error 1 : Arg0",
-        "timestamp": 1,
-      },
-      Object {
-        "message": "Error 1 : Arg1",
-        "timestamp": 2,
-      },
-    ],
-    "occurrences": Array [],
-    "projectId": "test",
-  },
-]
-`;
-
 exports[`Custom comparator should use a custom bundled comparator comparator  1`] = `
 Array [
   Object {
-    "id": "long-error-with-multiple-arguments-:-(arg0,-arg7,-arg8)",
-    "issue": Object {
-      "body": "Found 1 occurences of \\"Long Error with multiple Arguments : (Arg0, Arg7, Arg8)\\"",
-      "comments": Array [],
-      "id": "3",
-      "title": "Long Error with multiple Arguments : (Arg0, Arg7, Arg8)",
-      "url": "https://issue-tracker/project/test/3",
-    },
-    "name": "Long Error with multiple Arguments : (Arg0, Arg7, Arg8)",
-    "newOccurrences": Array [
+    "body": "Found 1 occurences of \\"Long Error with multiple Arguments : (Arg0, Arg7, Arg8)\\"",
+    "comments": Array [],
+    "id": "3",
+    "newOccurrences": Array [],
+    "occurrences": Array [
       Object {
         "message": "Long Error with multiple Arguments : (Arg0, Arg7, Arg8)",
         "timestamp": 3,
       },
     ],
-    "occurrences": Array [],
-    "projectId": "test",
+    "title": "Long Error with multiple Arguments : (Arg0, Arg7, Arg8)",
+    "url": "https://issue-tracker/project/3",
   },
   Object {
-    "id": "long-error-with-multiple-arguments-:-(arg1,-arg2,-arg3)",
-    "issue": Object {
-      "body": "Found 2 occurences of \\"Long Error with multiple Arguments : (Arg1, Arg2, Arg3)\\"",
-      "comments": Array [],
-      "id": "1",
-      "title": "Long Error with multiple Arguments : (Arg1, Arg2, Arg3)",
-      "url": "https://issue-tracker/project/test/1",
-    },
-    "name": "Long Error with multiple Arguments : (Arg1, Arg2, Arg3)",
+    "body": "Found 2 occurences of \\"Long Error with multiple Arguments : (Arg1, Arg2, Arg3)\\"",
+    "comments": Array [],
+    "id": "1",
     "newOccurrences": Array [
+      Object {
+        "message": "Long Error with multiple Arguments : (Arg1, Arg2, Arg4)",
+        "timestamp": 4,
+      },
+    ],
+    "occurrences": Array [
       Object {
         "message": "Long Error with multiple Arguments : (Arg1, Arg2, Arg3)",
         "timestamp": 1,
@@ -119,27 +36,96 @@ Array [
         "timestamp": 4,
       },
     ],
-    "occurrences": Array [],
-    "projectId": "test",
+    "title": "Long Error with multiple Arguments : (Arg1, Arg2, Arg3)",
+    "url": "https://issue-tracker/project/1",
   },
   Object {
-    "id": "long-error-with-multiple-arguments-:-(arg5,-arg4,-arg3)",
-    "issue": Object {
-      "body": "Found 1 occurences of \\"Long Error with multiple Arguments : (Arg5, Arg4, Arg3)\\"",
-      "comments": Array [],
-      "id": "2",
-      "title": "Long Error with multiple Arguments : (Arg5, Arg4, Arg3)",
-      "url": "https://issue-tracker/project/test/2",
-    },
-    "name": "Long Error with multiple Arguments : (Arg5, Arg4, Arg3)",
-    "newOccurrences": Array [
+    "body": "Found 1 occurences of \\"Long Error with multiple Arguments : (Arg5, Arg4, Arg3)\\"",
+    "comments": Array [],
+    "id": "2",
+    "newOccurrences": Array [],
+    "occurrences": Array [
       Object {
         "message": "Long Error with multiple Arguments : (Arg5, Arg4, Arg3)",
         "timestamp": 2,
       },
     ],
-    "occurrences": Array [],
-    "projectId": "test",
+    "title": "Long Error with multiple Arguments : (Arg5, Arg4, Arg3)",
+    "url": "https://issue-tracker/project/2",
+  },
+]
+`;
+
+exports[`Custom comparator should use a custom comparator based on an error attribute 1`] = `
+Array [
+  Object {
+    "body": "Found 2 occurences of \\"Error 1\\"",
+    "comments": Array [],
+    "id": "1",
+    "newOccurrences": Array [
+      Object {
+        "customAttribute": 1,
+        "message": "Error 1",
+        "timestamp": 3,
+      },
+    ],
+    "occurrences": Array [
+      Object {
+        "customAttribute": 1,
+        "message": "Error 1",
+        "timestamp": 1,
+      },
+      Object {
+        "customAttribute": 1,
+        "message": "Error 1",
+        "timestamp": 3,
+      },
+    ],
+    "title": "Error 1",
+    "url": "https://issue-tracker/project/1",
+  },
+  Object {
+    "body": "Found 1 occurences of \\"Error 1\\"",
+    "comments": Array [],
+    "id": "2",
+    "newOccurrences": Array [],
+    "occurrences": Array [
+      Object {
+        "customAttribute": 2,
+        "message": "Error 1",
+        "timestamp": 2,
+      },
+    ],
+    "title": "Error 1",
+    "url": "https://issue-tracker/project/2",
+  },
+]
+`;
+
+exports[`Custom comparator should use a custom comparator based on differences threshold 1`] = `
+Array [
+  Object {
+    "body": "Found 2 occurences of \\"Error 1 : Arg0\\"",
+    "comments": Array [],
+    "id": "1",
+    "newOccurrences": Array [
+      Object {
+        "message": "Error 1 : Arg1",
+        "timestamp": 2,
+      },
+    ],
+    "occurrences": Array [
+      Object {
+        "message": "Error 1 : Arg0",
+        "timestamp": 1,
+      },
+      Object {
+        "message": "Error 1 : Arg1",
+        "timestamp": 2,
+      },
+    ],
+    "title": "Error 1 : Arg0",
+    "url": "https://issue-tracker/project/1",
   },
 ]
 `;
@@ -147,17 +133,11 @@ Array [
 exports[`Track Existing Errors should track an existing error 1`] = `
 Array [
   Object {
-    "id": "a-new-error",
-    "issue": Object {
-      "body": "Found 1 occurences of \\"A new error\\"",
-      "comments": Array [
-        "Found new 1 occurences of A new error",
-      ],
-      "id": "1",
-      "title": "A new error",
-      "url": "https://issue-tracker/project/test/1",
-    },
-    "name": "A new error",
+    "body": "Found 1 occurences of \\"A new error\\"",
+    "comments": Array [
+      "Found new 1 occurences of A new error",
+    ],
+    "id": "1",
     "newOccurrences": Array [
       Object {
         "message": "A new error",
@@ -169,8 +149,13 @@ Array [
         "message": "A new error",
         "timestamp": 1,
       },
+      Object {
+        "message": "A new error",
+        "timestamp": 2,
+      },
     ],
-    "projectId": "test",
+    "title": "A new error",
+    "url": "https://issue-tracker/project/1",
   },
 ]
 `;
@@ -178,18 +163,16 @@ Array [
 exports[`Track Existing Errors should track multiples existing errors 1`] = `
 Array [
   Object {
-    "id": "error-1",
-    "issue": Object {
-      "body": "Found 2 occurences of \\"Error 1\\"",
-      "comments": Array [
-        "Found new 2 occurences of Error 1",
-      ],
-      "id": "1",
-      "title": "Error 1",
-      "url": "https://issue-tracker/project/test/1",
-    },
-    "name": "Error 1",
+    "body": "Found 2 occurences of \\"Error 1\\"",
+    "comments": Array [
+      "Found new 3 occurences of Error 1",
+    ],
+    "id": "1",
     "newOccurrences": Array [
+      Object {
+        "message": "Error 1",
+        "timestamp": 3,
+      },
       Object {
         "message": "Error 1",
         "timestamp": 6,
@@ -208,22 +191,29 @@ Array [
         "message": "Error 1",
         "timestamp": 3,
       },
+      Object {
+        "message": "Error 1",
+        "timestamp": 6,
+      },
+      Object {
+        "message": "Error 1",
+        "timestamp": 8,
+      },
     ],
-    "projectId": "test",
+    "title": "Error 1",
+    "url": "https://issue-tracker/project/1",
   },
   Object {
-    "id": "error-2",
-    "issue": Object {
-      "body": "Found 2 occurences of \\"Error 2\\"",
-      "comments": Array [
-        "Found new 1 occurences of Error 2",
-      ],
-      "id": "2",
-      "title": "Error 2",
-      "url": "https://issue-tracker/project/test/2",
-    },
-    "name": "Error 2",
+    "body": "Found 2 occurences of \\"Error 2\\"",
+    "comments": Array [
+      "Found new 2 occurences of Error 2",
+    ],
+    "id": "2",
     "newOccurrences": Array [
+      Object {
+        "message": "Error 2",
+        "timestamp": 4,
+      },
       Object {
         "message": "Error 2",
         "timestamp": 7,
@@ -238,20 +228,25 @@ Array [
         "message": "Error 2",
         "timestamp": 4,
       },
+      Object {
+        "message": "Error 2",
+        "timestamp": 7,
+      },
     ],
-    "projectId": "test",
+    "title": "Error 2",
+    "url": "https://issue-tracker/project/2",
   },
   Object {
-    "id": "error-4",
-    "issue": Object {
-      "body": "Found 2 occurences of \\"Error 4\\"",
-      "comments": Array [],
-      "id": "9",
-      "title": "Error 4",
-      "url": "https://issue-tracker/project/test/9",
-    },
-    "name": "Error 4",
+    "body": "Found 2 occurences of \\"Error 4\\"",
+    "comments": Array [],
+    "id": "9",
     "newOccurrences": Array [
+      Object {
+        "message": "Error 4",
+        "timestamp": 10,
+      },
+    ],
+    "occurrences": Array [
       Object {
         "message": "Error 4",
         "timestamp": 9,
@@ -261,8 +256,8 @@ Array [
         "timestamp": 10,
       },
     ],
-    "occurrences": Array [],
-    "projectId": "test",
+    "title": "Error 4",
+    "url": "https://issue-tracker/project/9",
   },
 ]
 `;
@@ -270,23 +265,18 @@ Array [
 exports[`Track New Errors should track a new error 1`] = `
 Array [
   Object {
-    "id": "a-new-error",
-    "issue": Object {
-      "body": "Found 1 occurences of \\"A new error\\"",
-      "comments": Array [],
-      "id": "1",
-      "title": "A new error",
-      "url": "https://issue-tracker/project/test/1",
-    },
-    "name": "A new error",
-    "newOccurrences": Array [
+    "body": "Found 1 occurences of \\"A new error\\"",
+    "comments": Array [],
+    "id": "1",
+    "newOccurrences": Array [],
+    "occurrences": Array [
       Object {
         "message": "A new error",
         "timestamp": 1,
       },
     ],
-    "occurrences": Array [],
-    "projectId": "test",
+    "title": "A new error",
+    "url": "https://issue-tracker/project/1",
   },
 ]
 `;
@@ -294,16 +284,20 @@ Array [
 exports[`Track New Errors should zip sames new errors together 1`] = `
 Array [
   Object {
-    "id": "a-new-error",
-    "issue": Object {
-      "body": "Found 3 occurences of \\"A new error\\"",
-      "comments": Array [],
-      "id": "1",
-      "title": "A new error",
-      "url": "https://issue-tracker/project/test/1",
-    },
-    "name": "A new error",
+    "body": "Found 3 occurences of \\"A new error\\"",
+    "comments": Array [],
+    "id": "1",
     "newOccurrences": Array [
+      Object {
+        "message": "A new error",
+        "timestamp": 3,
+      },
+      Object {
+        "message": "A new error",
+        "timestamp": 4,
+      },
+    ],
+    "occurrences": Array [
       Object {
         "message": "A new error",
         "timestamp": 1,
@@ -317,20 +311,20 @@ Array [
         "timestamp": 4,
       },
     ],
-    "occurrences": Array [],
-    "projectId": "test",
+    "title": "A new error",
+    "url": "https://issue-tracker/project/1",
   },
   Object {
-    "id": "another-error",
-    "issue": Object {
-      "body": "Found 2 occurences of \\"Another error\\"",
-      "comments": Array [],
-      "id": "2",
-      "title": "Another error",
-      "url": "https://issue-tracker/project/test/2",
-    },
-    "name": "Another error",
+    "body": "Found 2 occurences of \\"Another error\\"",
+    "comments": Array [],
+    "id": "2",
     "newOccurrences": Array [
+      Object {
+        "message": "Another error",
+        "timestamp": 5,
+      },
+    ],
+    "occurrences": Array [
       Object {
         "message": "Another error",
         "timestamp": 2,
@@ -340,27 +334,22 @@ Array [
         "timestamp": 5,
       },
     ],
-    "occurrences": Array [],
-    "projectId": "test",
+    "title": "Another error",
+    "url": "https://issue-tracker/project/2",
   },
   Object {
-    "id": "still-an-error",
-    "issue": Object {
-      "body": "Found 1 occurences of \\"Still an error\\"",
-      "comments": Array [],
-      "id": "6",
-      "title": "Still an error",
-      "url": "https://issue-tracker/project/test/6",
-    },
-    "name": "Still an error",
-    "newOccurrences": Array [
+    "body": "Found 1 occurences of \\"Still an error\\"",
+    "comments": Array [],
+    "id": "6",
+    "newOccurrences": Array [],
+    "occurrences": Array [
       Object {
         "message": "Still an error",
         "timestamp": 6,
       },
     ],
-    "occurrences": Array [],
-    "projectId": "test",
+    "title": "Still an error",
+    "url": "https://issue-tracker/project/6",
   },
 ]
 `;

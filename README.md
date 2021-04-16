@@ -12,9 +12,9 @@
   </a>
 </p>
 
-> A simple, flexible, light sdk to track any kind of errors and create automatic issue if found new.
+> A simple, flexible, light sdk to track any kind of occurrences and create automatic issue if found new.
 
-## Demo 
+## Demo
 
 Take a look to the demo 👉👉 [HERE](https://ludorival.github.io/demo-error-issue-tracker/) 👈👈
 
@@ -27,55 +27,46 @@ There are many ways to use this sdk:
 ## Install
 
 ```sh
-yarn add -D error-issue-tracker-sdk
+yarn add -D smart-issue-tracker-sdk
 ```
 
 ## Usage
 
 ```js
-import { trackErrors } from 'error-issue-tracker-sdk'
+import { trackIssues } from 'smart-issue-tracker-sdk'
 // --- your issue client
 class MyIssueClient {
-  async createIssue(error) {
+  constructor() {
+    this.store = []
+  }
+  async createIssue(issue) {
     // here you can create the issue related to an untracked error
-    return {
-      id: 'newIdIssue',
+    const savedIssue = {
+      ...issue,
+      id: this.store.length.toString(),
       url: 'http://issue-client/newIdIssue',
-      body: `Found ${error.newOccurrences.length} occurences of "${error.name}"`,
+      body: `Found ${issue.newOccurrences.length} occurences of "${issue.title}"`,
     }
+    this.store.push(savedIssue)
+    return this.store[this.store.length - 1]
   }
   async updateIssue(error) {
     // here you can update the issue for example add a new comment for new occurences
     const comments = [
-      ...error.issue.comments,
-      `Found new ${error.newOccurrences.length} occurences of ${error.name}`,
+      ...error.comments,
+      `Found new ${error.newOccurrences.length} occurences of ${error.title}`,
     ]
-    return { ...error.issue, comments }
+    return { ...error, comments }
   }
-}
-// --- your database provider
-class MyDatabase {
-  constructor() {
-    this.store = {}
-  }
-  async save(error) {
-    // here you save the error in a store
-    this.store[error.projectId] = this.store[error.projectId] || []
-    const savedError = {
-      id: this.store[error.projectId].length.toString(),
-      ...error,
-    }
-    this.store[error.projectId].push(savedError)
-    return savedError
-  }
-  async fetch(projectId) {
-    // here you can update the issue for example add a new comment for new occurences
-    return this.store[projectId] || []
+  async fetchIssues(options) {
+    return this.store
   }
 }
 // Your custom comparator
-const compareError = (a, b) =>
-  a.message.toLowerCase().localeCompare(b.message.toLowerCase())
+const compareIssue = (a, b) =>
+  a.occurrences[0].message
+    .toLowerCase()
+    .localeCompare(b.occurrences[0].message.toLowerCase())
 // use it
 const errors = [
   { message: 'Error when create the checkout', timestamp: 1 },
@@ -84,14 +75,13 @@ const errors = [
   { message: 'cannot call login on undefined', timestamp: 4 },
   { message: 'Null Pointer Exception on payment page', timestamp: 5 },
 ]
-src_1
-  .trackErrors(errors, {
-    issueClient: new MyIssueClient(),
-    database: new MyDatabase(),
-    compareError,
-    projectId: 'MyApplication',
-  })
-  .then((trackedErrors) => console.log(trackedErrors))
+trackIssues(errors, {
+  issueClient: new MyIssueClient(),
+  hooks: {
+    compareIssue,
+  },
+  fetchOption: {},
+}).then((trackedErrors) => console.log(trackedErrors))
 // should return
 // - "Error when create the checkout" (occurrences : 2)
 // - "Null Pointer Exception on payment page" (occurrences : 2)
