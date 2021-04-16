@@ -1,14 +1,14 @@
-<h1 align="center">Welcome to error-issue-tracker 👋</h1>
+<h1 align="center">Welcome to smart-issue-tracker-sdk 👋</h1>
 <p>
   <img alt="Version" src="https://img.shields.io/badge/version-0.0.1-blue.svg?cacheSeconds=2592000" />
-  <a href="https://github.com/ludorival/error-issue-tracker#readme" target="_blank">
+  <a href="https://github.com/ludorival/smart-issue-tracker-sdk#readme" target="_blank">
     <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
   </a>
-  <a href="https://github.com/ludorival/error-issue-tracker/graphs/commit-activity" target="_blank">
+  <a href="https://github.com/ludorival/smart-issue-tracker-sdk/graphs/commit-activity" target="_blank">
     <img alt="Maintenance" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" />
   </a>
-  <a href="https://github.com/ludorival/error-issue-tracker/blob/master/LICENSE" target="_blank">
-    <img alt="License: BSD--3--Clause" src="https://img.shields.io/github/license/ludorival/error-issue-tracker" />
+  <a href="https://github.com/ludorival/smart-issue-tracker-sdk/blob/master/LICENSE" target="_blank">
+    <img alt="License: BSD--3--Clause" src="https://img.shields.io/github/license/ludorival/smart-issue-tracker-sdk" />
   </a>
 </p>
 
@@ -16,7 +16,7 @@
 
 ## Demo
 
-Take a look to the demo 👉👉 [HERE](https://ludorival.github.io/demo-error-issue-tracker/) 👈👈
+Take a look to the demo 👉👉 [HERE](https://ludorival.github.io/demo-smart-issue-tracker-sdk/) 👈👈
 
 There are many ways to use this sdk:
 
@@ -105,7 +105,7 @@ Give a ⭐️ if this project helped you!
 ## 📝 License
 
 Copyright © 2021 [Ludovic Dorival](https://github.com/ludorival).<br />
-This project is [BSD--3--Clause](https://github.com/ludorival/error-issue-tracker/blob/master/LICENSE) licensed.
+This project is [BSD--3--Clause](https://github.com/ludorival/smart-issue-tracker-sdk/blob/master/LICENSE) licensed.
 
 ## Contributing
 

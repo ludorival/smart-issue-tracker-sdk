@@ -13,7 +13,7 @@
   "license": "BSD-3-Clause",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ludorival/error-issue-tracker.git"
+    "url": "https://github.com/ludorival/smart-issue-tracker-sdk.git"
   },
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",

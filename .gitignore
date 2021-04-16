@@ -6,5 +6,5 @@ node_modules/
 
 # Project files:
 
-demo/error-issue-tracker-github-firebase-app/.env
+demo/smart-issue-tracker-sdk-github-firebase-app/.env
 src/demo.ts
