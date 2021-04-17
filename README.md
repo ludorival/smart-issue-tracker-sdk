@@ -58,7 +58,7 @@ class MyIssueClient {
     ]
     return { ...error, comments }
   }
-  async fetchIssues(options) {
+  async fetchIssues() {
     return this.store
   }
 }
@@ -79,8 +79,8 @@ trackIssues(errors, {
   issueClient: new MyIssueClient(),
   hooks: {
     compareIssue,
+    compareOccurrence: (a, b) => a.timestamp - b.timestamp,
   },
-  fetchOption: {},
 }).then((trackedErrors) => console.log(trackedErrors))
 // should return
 // - "Error when create the checkout" (occurrences : 2)

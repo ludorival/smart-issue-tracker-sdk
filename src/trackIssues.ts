@@ -1,43 +1,31 @@
 import {
   EventHandler,
-  FetchOption,
   Hook,
   Issue,
-  Occurrence,
   TrackIssueOptions,
   TrackedIssue,
+  Comparator,
 } from '.'
 
-export async function trackIssues<
-  T extends Issue<R>,
-  R extends Occurrence = Occurrence,
-  S extends FetchOption = FetchOption
->(
+export async function trackIssues<T extends Issue<R>, R>(
   occurrences: R[],
   {
     issueClient,
-    fetchOption,
     hooks: {
-      shouldBundleIssueInto = () => true,
       initializeNewIssue = (occurrence: R) =>
         ({ occurrences: [occurrence] } as T),
-      compareIssue,
+      ...rest
     },
     eventHandler = {},
-  }: TrackIssueOptions<T, R, S>
+  }: TrackIssueOptions<T, R>
 ): Promise<TrackedIssue<T>[]> {
   const newIssues: T[] = occurrences.map((occurrence) =>
     initializeNewIssue(occurrence)
   )
 
-  const savedIssues: T[] = await issueClient.fetchIssues(fetchOption)
+  const savedIssues: T[] = await issueClient.fetchIssues()
 
-  const bundledIssues = bundleIssues(
-    savedIssues,
-    newIssues,
-    { shouldBundleIssueInto, compareIssue },
-    eventHandler
-  )
+  const bundledIssues = bundleIssues(savedIssues, newIssues, rest, eventHandler)
 
   const trackedIssues = await Promise.all(
     bundledIssues.map((issue) => {
@@ -50,13 +38,14 @@ export async function trackIssues<
   return trackedIssues
 }
 
-function bundleIssues<T extends Issue<R>, R extends Occurrence>(
+function bundleIssues<T extends Issue<R>, R>(
   savedIssues: T[],
   newIssues: T[],
   {
-    shouldBundleIssueInto,
+    shouldBundleIssueInto = () => true,
     compareIssue,
-  }: Omit<Required<Hook<T, R>>, 'initializeNewIssue'>,
+    compareOccurrence,
+  }: Hook<T, R>,
   {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     onIgnoredOccurrence = () => {},
@@ -78,7 +67,9 @@ function bundleIssues<T extends Issue<R>, R extends Occurrence>(
       const shouldBundle = shouldBundleIssueInto(current, last)
       const newOccurrences =
         similar && last && shouldBundle
-          ? keepNewOccurrences<T, R>(last, current)
+          ? compareOccurrence
+            ? keepNewOccurrences<T, R>(last, current, compareOccurrence)
+            : current.occurrences
           : []
 
       if (similar && last?.id && current.id) {
@@ -98,31 +89,37 @@ function bundleIssues<T extends Issue<R>, R extends Occurrence>(
     }, [])
     .filter((issue) => !issue.id || mapBundled[issue.id])
 }
-
-const keepNewOccurrences = <
-  T extends Issue<R>,
-  R extends Occurrence = Occurrence
->(
+type ExtendedOccurrence<R> = { target: boolean; occurrence: R }
+const keepNewOccurrences = <T extends Issue<R>, R>(
   fromIssue: T,
-  toIssue: T
+  toIssue: T,
+  compareOccurrence: Comparator<R>
 ): R[] => {
-  const newMapping: { [key: number]: boolean | undefined } = {}
-  toIssue.occurrences.forEach((o) => (newMapping[o.timestamp] = true))
-  const newOnes = sortOccurrences(
-    fromIssue.occurrences.concat(toIssue.occurrences)
-  ).reduce<R[]>((acc, value, i, array) => {
-    if (value.timestamp === array[i + 1]?.timestamp) {
-      return acc
-    }
-    if (value.timestamp === array[i - 1]?.timestamp) {
-      return acc
-    }
-    if (!newMapping[value.timestamp]) {
-      return acc
-    }
-    return acc.concat(value)
-  }, [])
+  const extendedTargetOccurences = toIssue.occurrences.map((occurrence) => ({
+    target: true,
+    occurrence,
+  }))
+  const extendedFromOccurences = fromIssue.occurrences.map((occurrence) => ({
+    target: false,
+    occurrence,
+  }))
+  const compare: Comparator<ExtendedOccurrence<R>> = (a, b) =>
+    compareOccurrence(a.occurrence, b.occurrence)
+  const newOnes = extendedFromOccurences
+    .concat(extendedTargetOccurences)
+    .sort(compare)
+    .reduce<ExtendedOccurrence<R>[]>((acc, value, i, array) => {
+      if (array[i + 1] && compare(value, array[i + 1]) === 0) {
+        return acc
+      }
+      if (array[i - 1] && compare(value, array[i - 1]) === 0) {
+        return acc
+      }
+      if (!value.target) {
+        return acc
+      }
+      return acc.concat(value)
+    }, [])
+    .map((e) => e.occurrence)
   return newOnes
 }
-const sortOccurrences = <R extends Occurrence = Occurrence>(errors: R[]) =>
-  errors.sort((a, b) => a.timestamp - b.timestamp)

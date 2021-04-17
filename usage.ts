@@ -1,25 +1,19 @@
-import {
-  trackIssues,
-  IssueClient,
-  Comparator,
-  Issue,
-  Occurrence,
-  FetchOption,
-} from './src'
+import { trackIssues, IssueClient, Comparator, Issue } from './src'
 
 // --- your occurence type
-interface OccurrenceType extends Occurrence {
+interface Occurrence {
+  timestamp: number
   message: string
 }
 // --- your issue type
-interface MyIssueType extends Issue<OccurrenceType> {
+interface MyIssueType extends Issue<Occurrence> {
   title: string
   body: string
   comments: string[]
-  newOccurrences: OccurrenceType[]
+  newOccurrences: Occurrence[]
 }
 // --- your issue client
-class MyIssueClient implements IssueClient<MyIssueType> {
+class MyIssueClient implements IssueClient<MyIssueType, Occurrence> {
   store: Required<MyIssueType>[] = []
   async createIssue(issue: MyIssueType) {
     // here you can create the issue related to an untracked error
@@ -41,7 +35,7 @@ class MyIssueClient implements IssueClient<MyIssueType> {
     return { ...error, comments } as Required<MyIssueType>
   }
 
-  async fetchIssues(options: FetchOption) {
+  async fetchIssues() {
     return this.store
   }
 }
@@ -52,7 +46,7 @@ const compareIssue: Comparator<MyIssueType> = (a, b) =>
     .toLowerCase()
     .localeCompare(b.occurrences[0].message.toLowerCase())
 // use it
-const errors: OccurrenceType[] = [
+const errors: Occurrence[] = [
   { message: 'Error when create the checkout', timestamp: 1 },
 
   { message: 'Error When Create The Checkout', timestamp: 2 },
@@ -63,12 +57,13 @@ const errors: OccurrenceType[] = [
 
   { message: 'Null Pointer Exception on payment page', timestamp: 5 },
 ]
+
 trackIssues(errors, {
   issueClient: new MyIssueClient(),
   hooks: {
     compareIssue,
+    compareOccurrence: (a, b) => a.timestamp - b.timestamp,
   },
-  fetchOption: {},
 }).then((trackedErrors) => console.log(trackedErrors))
 // should return
 // - "Error when create the checkout" (occurrences : 2)

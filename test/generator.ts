@@ -3,11 +3,11 @@ import {
   Comparator,
   EventHandler,
   Issue,
-  Occurrence,
   TrackIssueOptions,
   trackIssues,
 } from '../src/index'
-export interface Error extends Occurrence {
+export interface Error {
+  timestamp: number
   message: string
   ignored?: boolean
   customAttribute?: number
@@ -36,6 +36,7 @@ export const initOptions = async ({
   issuesCollections = {}
   const options: TrackIssueOptions<TestIssue, Error> = {
     hooks: {
+      compareOccurrence: (a, b) => a.timestamp - b.timestamp,
       initializeNewIssue: (occ) => ({
         newOccurrences: [],
         occurrences: [occ],
@@ -76,7 +77,6 @@ export const initOptions = async ({
           return Promise.resolve(issuesCollections[issue.id])
         }),
     },
-    fetchOption: {},
     eventHandler: {
       ...eventHandler,
       onBundledIssue: (target, newOccurrences) =>
