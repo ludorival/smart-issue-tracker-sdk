@@ -18,9 +18,10 @@ export interface IssueClient<T extends Issue<R>, R> {
 export type Comparator<T> = (source: T, target: T) => number
 export interface Hook<T extends Issue<R>, R> {
   initializeNewIssue?: (occurrence: R) => T
-  compareIssue: Comparator<T>
+  compareIssue?: Comparator<T>
   shouldBundleIssueInto?: (issueToBundle: T, into: T) => boolean
   compareOccurrence?: Comparator<R>
+  getIdentifier?: (occurrence: R) => number | string
 }
 export interface EventHandler<T extends Issue<R>, R> {
   onIgnoredOccurrence?: (source: T, target: T) => void

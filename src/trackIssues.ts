@@ -43,8 +43,9 @@ function bundleIssues<T extends Issue<R>, R>(
   newIssues: T[],
   {
     shouldBundleIssueInto = () => true,
-    compareIssue,
     compareOccurrence,
+    compareIssue = defaultComparator(compareOccurrence),
+    getIdentifier,
   }: Hook<T, R>,
   {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -67,8 +68,8 @@ function bundleIssues<T extends Issue<R>, R>(
       const shouldBundle = shouldBundleIssueInto(current, last)
       const newOccurrences =
         similar && last && shouldBundle
-          ? compareOccurrence
-            ? keepNewOccurrences<T, R>(last, current, compareOccurrence)
+          ? getIdentifier
+            ? keepNewOccurrences<T, R>(last, current, getIdentifier)
             : current.occurrences
           : []
 
@@ -89,11 +90,25 @@ function bundleIssues<T extends Issue<R>, R>(
     }, [])
     .filter((issue) => !issue.id || mapBundled[issue.id])
 }
+
+function defaultComparator<T extends Issue<R>, R>(
+  compare?: Comparator<R>
+): Comparator<T> {
+  if (!compare)
+    throw new Error('Compare Occurrence or Compare Issue must be implemented')
+  return (source, target) => {
+    const firstOccurrence = target.occurrences[0]
+    return source.occurrences.some((o) => compare(o, firstOccurrence) === 0)
+      ? 0
+      : compare(source.occurrences[0], firstOccurrence)
+  }
+}
+
 type ExtendedOccurrence<R> = { target: boolean; occurrence: R }
 const keepNewOccurrences = <T extends Issue<R>, R>(
   fromIssue: T,
   toIssue: T,
-  compareOccurrence: Comparator<R>
+  getIdentifier: (o: R) => number | string
 ): R[] => {
   const extendedTargetOccurences = toIssue.occurrences.map((occurrence) => ({
     target: true,
@@ -103,8 +118,19 @@ const keepNewOccurrences = <T extends Issue<R>, R>(
     target: false,
     occurrence,
   }))
+
+  const compareStringOrNumber = (
+    a: number | string,
+    b: number | string
+  ): number => {
+    if (typeof a === 'number' && typeof b === 'number') return a - b
+    else return a.toString().localeCompare(b.toString())
+  }
   const compare: Comparator<ExtendedOccurrence<R>> = (a, b) =>
-    compareOccurrence(a.occurrence, b.occurrence)
+    compareStringOrNumber(
+      getIdentifier(a.occurrence),
+      getIdentifier(b.occurrence)
+    )
   const newOnes = extendedFromOccurences
     .concat(extendedTargetOccurences)
     .sort(compare)

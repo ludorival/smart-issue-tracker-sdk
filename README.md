@@ -63,10 +63,7 @@ class MyIssueClient {
   }
 }
 // Your custom comparator
-const compareIssue = (a, b) =>
-  a.occurrences[0].message
-    .toLowerCase()
-    .localeCompare(b.occurrences[0].message.toLowerCase())
+const compareOccurrence = (a, b) => a.message.localeCompare(b.message)
 // use it
 const errors = [
   { message: 'Error when create the checkout', timestamp: 1 },
@@ -78,8 +75,8 @@ const errors = [
 trackIssues(errors, {
   issueClient: new MyIssueClient(),
   hooks: {
-    compareIssue,
-    compareOccurrence: (a, b) => a.timestamp - b.timestamp,
+    getIdentifier: (occurrence) => occurrence.timestamp, // to avoid adding same occurrence
+    compareOccurrence,
   },
 }).then((trackedErrors) => console.log(trackedErrors))
 // should return

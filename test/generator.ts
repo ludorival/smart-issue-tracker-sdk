@@ -24,8 +24,7 @@ export const initOptions = async ({
   initialIssues = [],
   compareOccurrence = (source, target) =>
     source.message.localeCompare(target.message),
-  compareIssue = (source, target) =>
-    compareOccurrence(source.occurrences[0], target.occurrences[0]),
+  compareIssue,
   eventHandler,
 }: {
   initialIssues?: Error[]
@@ -36,7 +35,7 @@ export const initOptions = async ({
   issuesCollections = {}
   const options: TrackIssueOptions<TestIssue, Error> = {
     hooks: {
-      compareOccurrence: (a, b) => a.timestamp - b.timestamp,
+      getIdentifier: (a) => a.timestamp,
       initializeNewIssue: (occ) => ({
         newOccurrences: [],
         occurrences: [occ],
@@ -45,6 +44,7 @@ export const initOptions = async ({
         comments: [],
       }),
       compareIssue,
+      compareOccurrence,
       shouldBundleIssueInto: (issueToBundle) =>
         !issueToBundle.occurrences[0]?.ignored,
     },
