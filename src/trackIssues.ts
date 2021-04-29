@@ -19,6 +19,7 @@ export async function trackIssues<T extends Issue<R>, R>(
     eventHandler = {},
   }: TrackIssueOptions<T, R>
 ): Promise<TrackedIssue<T>[]> {
+  if (!occurrences.length) return []
   const newIssues: T[] = occurrences.map((occurrence) =>
     initializeNewIssue(occurrence)
   )
