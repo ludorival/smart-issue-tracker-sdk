@@ -25,7 +25,7 @@ export interface Hook<T extends Issue<R>, R> {
 }
 export interface EventHandler<T extends Issue<R>, R> {
   onIgnoredOccurrence?: (source: T, target: T) => void
-  onBundledIssue?: (target: T, newOccurences: R[]) => void
+  onBundledIssue?: (target: T, newOccurences: R[], current: T) => void
   onMatchedTrackedIssues?: (source: T, target: T) => void
   onNotBundledIssue?: (source: T, target?: T) => void
 }

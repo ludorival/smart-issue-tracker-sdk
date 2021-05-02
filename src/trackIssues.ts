@@ -82,7 +82,7 @@ function bundleIssues<T extends Issue<R>, R>(
       } else if (similar && newOccurrences.length) {
         last.occurrences = last.occurrences.concat(newOccurrences)
         if (last.id) mapBundled[last.id] = true
-        onBundledIssue(last, newOccurrences)
+        onBundledIssue(last, newOccurrences, current)
         return accumulated
       } else if (last) {
         onNotBundledIssue(current, last)
