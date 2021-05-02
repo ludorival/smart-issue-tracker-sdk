@@ -19,7 +19,11 @@ export type Comparator<T> = (source: T, target: T) => number
 export interface Hook<T extends Issue<R>, R> {
   initializeNewIssue?: (occurrence: R) => T
   compareIssue?: Comparator<T>
-  shouldBundleIssueInto?: (issueToBundle: T, into: T) => boolean
+  shouldBundleIssueInto?: (
+    issueToBundle: T,
+    into: T,
+    areSimilar: boolean
+  ) => boolean
   compareOccurrence?: Comparator<R>
   getIdentifier?: (occurrence: R) => number | string
 }

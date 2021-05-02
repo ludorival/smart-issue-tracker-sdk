@@ -66,7 +66,8 @@ function bundleIssues<T extends Issue<R>, R>(
     .reduce<T[]>((accumulated, current) => {
       const last = accumulated[accumulated.length - 1]
       const similar = last && compareIssue(last, current) === 0
-      const shouldBundle = shouldBundleIssueInto(current, last)
+      const shouldBundle =
+        !last || shouldBundleIssueInto(current, last, similar)
       const newOccurrences =
         similar && last && shouldBundle
           ? getIdentifier
