@@ -39,7 +39,7 @@
     "major": "npm version major -m \"Major upgrade to %s for reasons\""
   },
   "devDependencies": {
-    "@types/jest": "27.0.2",
+    "@types/jest": "27.0.3",
     "@types/lodash": "4.14.177",
     "@types/node": "16.11.8",
     "@typescript-eslint/eslint-plugin": "4.33.0",
