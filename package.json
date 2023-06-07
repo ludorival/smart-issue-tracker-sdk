@@ -44,7 +44,7 @@
     "@types/node": "16.18.34",
     "@typescript-eslint/eslint-plugin": "4.33.0",
     "@typescript-eslint/parser": "4.33.0",
-    "conventional-changelog-cli": "2.2.2",
+    "conventional-changelog-cli": "3.0.0",
     "coveralls": "3.1.1",
     "cz-conventional-changelog": "3.3.0",
     "eslint": "7.32.0",
