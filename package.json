@@ -39,7 +39,7 @@
     "major": "npm version major -m \"Major upgrade to %s for reasons\""
   },
   "devDependencies": {
-    "@types/jest": "27.5.2",
+    "@types/jest": "30.0.0",
     "@types/lodash": "4.17.20",
     "@types/node": "16.18.126",
     "@typescript-eslint/eslint-plugin": "4.33.0",
@@ -49,9 +49,9 @@
     "cz-conventional-changelog": "3.3.0",
     "eslint": "7.32.0",
     "eslint-plugin-prettier": "4.2.5",
-    "jest": "27.5.1",
+    "jest": "30.0.5",
     "prettier": "2.8.8",
-    "ts-jest": "27.1.5",
+    "ts-jest": "29.4.0",
     "ts-node": "10.9.2",
     "typescript": "4.9.5",
     "lodash": "4.17.21"
